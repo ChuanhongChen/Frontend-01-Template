@@ -1,0 +1,26 @@
+<html>
+
+<head></head>
+
+<body>
+    <script>
+        const checkNumberString = /^[+-]?((\d*\.?\d*)([eE][-\+]?\d+)?|^0[bB][01]+|^0[oO0][0-7]+|^0[xX][0-9a-fA-F]+)$/;// /^[+-]?((\.\d+|(0|[1-9]\d*)\.?\d*?|[\d]+\.?)([eE][-\+]?\d+)?|^0[bB][01]+|^0[oO0][0-7]+|^0[xX][0-9a-fA-F]+)$/;
+
+        const testArray = [1, 1., 1.1, .1, 1e2, 1.1e2, .1e2, -1, +1, -1e-2, -1.1e-2, -.1e-2, 0b00100, 0o00100, 0x00100,"aa"]
+        let foundError = false
+        let index = 0
+        for (; index < testArray.length; index++) {
+            if (!checkNumberString.test(testArray[index].toString(10))) {
+                foundError = true
+                break;
+            }
+        }
+        if (foundError) {
+            console.error(testArray[index].toString(10) + "错了");
+        } else {
+            console.info("都对了");
+        }
+    </script>
+</body>
+
+</html>
