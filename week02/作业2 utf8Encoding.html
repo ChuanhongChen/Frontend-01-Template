@@ -1,61 +1,61 @@
 <html>
     <head></head>
-    <body></body>
-    <script>
-        const UTF8_Encoding = function (str) {
-            const codeArray = [];
-            for (let ch of str) {
-                let code = ch.codePointAt(0);
-                if (0x00 <= code && code <= 0x7f) {
-                    codeArray.push(code);
-                } else if (0x80 <= code && code <= 0x7ff) {
-                    codeArray.push((192 | (31 & (code >> 6))));
-                    codeArray.push((128 | (63 & code)))
-                } else if (0x800 <= code && code <= 0xffff) {
-                    codeArray.push((224 | (15 & (code >> 12))));
-                    codeArray.push((128 | (63 & (code >> 6))));
-                    codeArray.push((128 | (63 & code)))
-                } else if (0x10000 <= code && code <= 0x1fffff) {
-                    codeArray.push((240 | (7 & (code >> 18))));
-                    codeArray.push((128 | (63 & (code >> 12))));
-                    codeArray.push((128 | (63 & (code >> 6))));
-                    codeArray.push((128 | (63 & code)))
-                } else if (0x200000 <= code && code <= 0x3ffffff) {
-                    codeArray.push((248 | (3 & (code >> 24))));
-                    codeArray.push((128 | (63 & (code >> 18))));
-                    codeArray.push((128 | (63 & (code >> 12))));
-                    codeArray.push((128 | (63 & (code >> 6))));
-                    codeArray.push((128 | (63 & code)))
-                } else if (0x4000000 <= code && code <= 0x7fffffff) {
-                    codeArray.push((252 | (1 & (code >> 30))));
-                    codeArray.push((128 | (63 & (code >> 24))));
-                    codeArray.push((128 | (63 & (code >> 18))));
-                    codeArray.push((128 | (63 & (code >> 12))));
-                    codeArray.push((128 | (63 & (code >> 6))));
-                    codeArray.push((128 | (63 & code)))
+    <body>
+        <script>
+            const UTF8_Encoding = function (str) {
+                const codeArray = [];
+                for (let ch of str) {
+                    let code = ch.codePointAt(0);
+                    if (0x00 <= code && code <= 0x7f) {
+                        codeArray.push(code);
+                    } else if (0x80 <= code && code <= 0x7ff) {
+                        codeArray.push((192 | (31 & (code >> 6))));
+                        codeArray.push((128 | (63 & code)))
+                    } else if (0x800 <= code && code <= 0xffff) {
+                        codeArray.push((224 | (15 & (code >> 12))));
+                        codeArray.push((128 | (63 & (code >> 6))));
+                        codeArray.push((128 | (63 & code)))
+                    } else if (0x10000 <= code && code <= 0x1fffff) {
+                        codeArray.push((240 | (7 & (code >> 18))));
+                        codeArray.push((128 | (63 & (code >> 12))));
+                        codeArray.push((128 | (63 & (code >> 6))));
+                        codeArray.push((128 | (63 & code)))
+                    } else if (0x200000 <= code && code <= 0x3ffffff) {
+                        codeArray.push((248 | (3 & (code >> 24))));
+                        codeArray.push((128 | (63 & (code >> 18))));
+                        codeArray.push((128 | (63 & (code >> 12))));
+                        codeArray.push((128 | (63 & (code >> 6))));
+                        codeArray.push((128 | (63 & code)))
+                    } else if (0x4000000 <= code && code <= 0x7fffffff) {
+                        codeArray.push((252 | (1 & (code >> 30))));
+                        codeArray.push((128 | (63 & (code >> 24))));
+                        codeArray.push((128 | (63 & (code >> 18))));
+                        codeArray.push((128 | (63 & (code >> 12))));
+                        codeArray.push((128 | (63 & (code >> 6))));
+                        codeArray.push((128 | (63 & code)))
+                    }
+                }
+                return new Uint8Array(codeArray);
+            }
+            const te=new TextEncoder()
+            const sample = te.encode("china中国𠮷")
+            const testTarget = UTF8_Encoding('china中国𠮷'); 
+                let foundError = false
+            if (sample.length !== testTarget.length){
+                foundError = true
+            } else {
+                for (let index = 0; index < sample.length; index++) {
+                    if (sample[index]!==testTarget[index]){
+                        foundError = true
+                        break;
+                    }
                 }
             }
-            return new Uint8Array(codeArray);
-        }
-        const te=new TextEncoder()
-        const sample = te.encode("china中国𠮷")
-        const testTarget = UTF8_Encoding('china中国𠮷'); 
-            let foundError = false
-        if (sample.length !== testTarget.length){
-            foundError = true
-        } else {
-            for (let index = 0; index < sample.length; index++) {
-                if (sample[index]!==testTarget[index]){
-                    foundError = true
-                    break;
-                }
+            if (foundError){
+                console.error("错了");
+            } else {
+                console.info("对了");
             }
-        }
-        if (foundError){
-            console.error("错了");
-        } else {
-            console.info("对了");
-        }
-        console.table({"sample":sample,"target":testTarget});
-    </script>
+            console.table({"sample":sample,"target":testTarget});
+        </script></body>
 </html>
