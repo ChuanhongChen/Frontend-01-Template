@@ -26,6 +26,7 @@
         });
         pre.innerText = convertNumberToString.toString();
         function convertNumberToString(number, x = 10) {
+            if (isNaN(str)) return NaN;
             let minus = number < 0;
             let absNum = Math.abs(number)
             let integer = Math.floor(absNum);
@@ -83,11 +84,11 @@
                     while (str[i] === '0') {
                         i++;
                     }
-                    str = str[i] + '.' + str.substr(i+1, 16) + "e";
+                    str = str[i] + '.' + str.substr(i + 1, 16) + "e";
                     str += power;
                 }
             }
-            return minus ? "-" + str : str !== '' ? str : "NaN";
+            return minus ? "-" + str : str;
         };
     }();
 </script>
