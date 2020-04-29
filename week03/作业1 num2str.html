@@ -1,0 +1,96 @@
+<html>
+
+<head></head>
+
+<body>
+    <section>
+        <h1>数字转字符串<small>Number to String</small></h1>
+        <input type="text" id="input1" placeholder="请输入数字">
+        <p id="p1">测试：<br>
+            答案1：<br>
+            答案2：<br>
+        </p>
+        <pre id="pre1"></pre>
+    </section>
+</body>
+<script>
+    void function () {
+        const input = document.getElementById('input1');
+        const p = document.getElementById('p1');
+        const pre = document.getElementById('pre1');
+        input.addEventListener('keyup', e => {
+            const val = e.target.value;
+            p.innerText = '测试1：' + convertNumberToString(val)
+                + '\n答案1：' + ("" + Number(val))
+                + '\n答案2：' + String(Number(val));
+        });
+        pre.innerText = convertNumberToString.toString();
+        function convertNumberToString(number, x = 10) {
+            let minus = number < 0;
+            let absNum = Math.abs(number)
+            let integer = Math.floor(absNum);
+            let faction = absNum - integer;
+            let str = '';
+            while (integer > 0) {
+                //12345-> 1234 -> 123 -> 12 -> 1 -> 0循环到整数部分为0
+                str = integer % x + str;
+                integer = Math.floor(integer / x);
+            }
+            //有整数时从n到0，只有小数部分时，从-1到-N
+            let power = str.length - 1;
+            let gotNotZero = false;
+            if (faction > 0) {
+                //小数不为0时要记录小数
+                str += '.';
+                let i = 0;
+                //因为输入的内容其实时文本，所以从文本长度减去整数长度得到小数长度
+                let fLen = number.length - power;
+                for (let index = 0; index < fLen; index++) {
+                    //每次把十分位转到个位然，然后只要个位
+                    let digit = Math.floor(faction * x);
+                    if (integer <= 0 && !gotNotZero && digit <= Number.EPSILON) {
+                        //整数为0，小数点后还没遇到非0数字，当前数字小于0时，要记录0.1的次幂数
+                        power -= 1
+                    }
+                    else {
+                        gotNotZero = true;
+                    }
+                    str += digit;
+                    //删掉已经记录的小数（挪到个位那个）
+                    faction = faction * x - digit;
+                }
+                //删除最后面没用的0
+                for (let i = str.length - 1; i > 0; i--) {
+                    const element = str[i];
+                    if (str[i] !== '0') {
+                        str = str.substring(0, i + 1);
+                        break;
+                    }
+                }
+            }
+            if (power >= 0) {
+                //按js的规则加上科学记数法
+                if (str.length >= 22) {
+                    str = str.replace(".", "");
+                    str = str[0] + '.' + str.substr(1, 16) + "e";
+                    str += power;
+                }
+            } else {
+                //小数的长度和整数不一样，并且要跳过前面没用的0，从第一个非0数字开始
+                if (str.length >= 13) {
+                    str = str.replace(".", "");
+                    let i = 1;
+                    while (str[i] === '0') {
+                        i++;
+                    }
+                    str = str[i] + '.' + str.substr(i+1, 16) + "e";
+                    str += power;
+                }
+            }
+            return minus ? "-" + str : str !== '' ? str : "NaN";
+        };
+    }();
+</script>
+</body>
+
+</html>

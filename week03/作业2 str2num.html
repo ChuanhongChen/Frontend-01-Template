@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+
+<body>
+    <section>
+        <h1>字符串转数字<small>String to Number</small></h1>
+        <input type="text" id="input1" placeholder="请输入数字">
+        <p id="p1">测试：<br>
+            答案1：<br></p>
+        <pre id="pre1"></pre>
+    </section>
+    <script>
+        /**convertStringToNumber**/
+        void function () {
+            const input = document.getElementById('input1');
+            const p = document.getElementById('p1');
+            const pre = document.getElementById('pre1');
+            input.addEventListener('keyup', e => {
+                const val = e.target.value;
+                p.innerText = '测试：' + convertStringToNumber(val) + '\n答案：' + Number(val) + '\n';
+            });
+            pre.innerText = convertStringToNumber;
+
+            function convertStringToNumber(str, x = 10) {
+                if (isNaN(str)) return NaN;
+                const eos = { //end-on system
+                    '0[bB]': 2,
+                    '0[oO0]': 8,
+                    '0[xX]': 16
+                };
+                // 去除首尾空白字符
+                str = str.trim();
+                // 判断正负
+                let minus = str.indexOf('-') === 0 ? true : false;
+                //去除多余的正负号±
+                str = str[0] === '+' || str[0] === '-' ? str.slice(1) : str;
+                //用正则根据不同前缀选择对应进制
+                for (let r in eos) {
+                    let reg = new RegExp('^' + r)
+                    if (reg.test(str)) {
+                        str = str.replace(reg, '');
+                        x = eos[r];
+                        break
+                    }
+                }
+                //获取整数部分的长度，注意小数和科学计数法
+                let pointIndex = str.indexOf('.');
+                let eIndex = str.indexOf('E') === -1 ? str.indexOf('e') : str.indexOf('E');
+                let lenInt = pointIndex >= 0 ? pointIndex - 1
+                    : eIndex > 0 ? eIndex - 1 : str.length - 1;
+                let minusOfPower = str[eIndex + 1] === "-";
+                let number = 0
+                const flagCode = '0'.codePointAt(0)
+                let state = 'integer'
+                let power = 0
+                str.split('').forEach((item, index) => {
+                    if (x === 10 && (item === 'e' || item === 'E')) {
+                        //十进制情况下处理科学记数法
+                        state = 'scientific notation';
+                        return;
+                    } else if (x === 10 && item === '.') {
+                        //十进制情况下处理小数
+                        state = 'decimal fraction';
+                        return;
+                    } else if (item === '+' || item === '-') {
+                        //跳过±号，这里针对科学记数法
+                        return;
+                    }
+
+                    let itemCode = item.codePointAt(0)
+                    //计算16进制专有的数字位
+                    if (x === eos['0[xX]']) {
+                        if (/[a-f]/.test(item)) {
+                            itemCode = flagCode + 10 + item.codePointAt(0) - 'a'.codePointAt(0)
+                        } else if (/[A-F]/.test(item)) {
+                            itemCode = flagCode + 10 + item.codePointAt(0) - 'A'.codePointAt(0)
+                        }
+                    }
+
+                    tmp = itemCode - flagCode
+                    if (state === 'integer') {
+                        //根据不同的进制和位数换算对应的数值
+                        //每一位数字要乘以对应进制的n次幂
+                        //算法：{进制x [ (整数长度 - 1)lenInt - 当前索引index ]}
+                        //说明：位数越大，索引越小，比如123.456百位索引是0，整数长是3，
+                        //1对应10的(3-1)-0=2次方，2对应10的(3-1)-1=1次方，以此类推
+                        tmp *= x ** (lenInt - index)
+                        number += tmp
+                    } else if (state === 'scientific notation') {
+                        //科学记数法每一位数字要乘以10的n次幂 次幂：字符串 - 当前索引index
+                        tmp *= 10 ** (str.length - 1 - index)
+                        power += tmp
+                    } else if (state === 'decimal fraction') {
+                        //根据不同的进制和位数换算对应的数值，
+                        //每一位数字要除以对应进制的n次幂
+                        //算法：[进制 x ( 当前索引index - 1 - (整数长度 - 1)lenInt )]
+                        //说明：位数越大，索引越大，比如123.456十分位位索引是4，整数长是3，
+                        //4要除以10的4-1-(3-1)=4-3=1次方，5要除以10的5-1-(3-1)=5-3=2次方，以此类推
+                        tmp /= x ** (index - 1 - lenInt)
+                        number += tmp
+                    }
+                })
+
+                return (minus ? -number : number) * (minusOfPower ? 0.1 ** power : 10 ** power);
+            }
+        }()
+    </script>
+</body>
+
+</html>
