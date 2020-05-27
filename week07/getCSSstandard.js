@@ -1,8 +1,9 @@
-//
+// 获取container下所有节点
 const list = document.getElementById("container").children
 
 const result = []
 for (let i of list) {
+    // 根据data-tag筛选出css标准
     if (i.getAttribute('data-tag').match(/css/)) {
         result.push({
             name: i.children[1].innerText,
@@ -14,7 +15,7 @@ for (let i of list) {
 let iframe = document.createElement("iframe");
 document.body.innerHTML = "";
 document.body.appendChild(iframe);
-
+// 收集 CSS 属性相关标准
 function happen(element, event) {
     return new Promise(function (resolve) {
         let handler = () => {
