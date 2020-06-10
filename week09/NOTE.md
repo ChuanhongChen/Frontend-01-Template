@@ -129,9 +129,7 @@ CSS 属性不要滥用，不要用 border 等去写三角形、五角星等可�
 
 
 
-> CSS Property 分类【见脑图】
-
-
+[CSS Property 分类](CSSProperty.xmind)
 
 ----
 
@@ -314,7 +312,4 @@ CSS 属性不要滥用，不要用 border 等去写三角形、五角星等可�
     </script>
     ```
 
-    [capture](https://github.com/angleecn/relearningFE/issues/3)
-
     当我们点击一个元素时，首先拿到的是坐标，从外到里捕获，直到找到 EventTarget，从里到外冒泡。
-
