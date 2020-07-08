@@ -1,4 +1,6 @@
-# Proxy
+# 13周总结
+
+## Proxy
 
 [MDN Prox](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 
@@ -6,7 +8,7 @@
 
 观察者模式: class based
 
-reactive: 代理模式
+代理模式：reactive  
 
 ## 组件设计
 
