@@ -1,0 +1,6 @@
+server/node_modules/*
+publish-server/node_modules/*
+publish-tool/node_modules/*
+publish-server-vanilla/node_modules/*
+demo/node_modules/*
+node_modules/*
